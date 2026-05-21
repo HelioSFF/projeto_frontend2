@@ -171,54 +171,132 @@ export const JOBS: Job[] = [
 ];
 
 export const JobService = {
-  getJobs: async (filters: { query?: string; type?: string } = {}): Promise<Job[]> => {
-    const config = getApiConfig();
-    
-    // 1. Simula Latência da Rede
-    await new Promise((resolve) => setTimeout(resolve, config.simulateLatencyMs));
+getJobs: async (
+  filters: { query?: string; type?: string } = {}
+): Promise<Job[]> => {
 
-    // 2. Simula Erro do Servidor
-    if (config.simulateError) {
-      throw new Error('Falha na comunicação com o servidor remoto (Erro 500). Verifique suas configurações de rede.');
+  const config = getApiConfig();
+
+  await new Promise((resolve) =>
+    setTimeout(resolve, config.simulateLatencyMs)
+  );
+
+  if (config.simulateError) {
+    throw new Error('Falha na comunicação com o servidor remoto.');
+  }
+
+  try {
+
+    const response = await fetch('https://remoteok.com/api');
+
+    if (!response.ok) {
+      throw new Error('Erro ao buscar vagas');
     }
 
-    // 3. Processa e filtra os dados localmente
-    let filteredJobs = [...JOBS];
+    const data = await response.json();
 
-    if (filters.query && filters.query.trim() !== '') {
-      const search = filters.query.toLowerCase().trim();
-      filteredJobs = filteredJobs.filter(
-        (job) =>
-          job.title.toLowerCase().includes(search) ||
-          job.company.toLowerCase().includes(search) ||
-          job.skills.some((skill) => skill.toLowerCase().includes(search))
-      );
-    }
+    // remove metadado
+    const jobs = data.slice(1);
 
-    if (filters.type && filters.type !== 'Todos') {
-      filteredJobs = filteredJobs.filter((job) => job.type === filters.type);
-    }
+    const internshipRemote = jobs.filter((job: any) => {
 
-    return filteredJobs;
-  },
+      const text = `
+        ${job.position}
+        ${job.description}
+        ${(job.tags || []).join(' ')}
+      `.toLowerCase();
+
+      const isIntern =
+        text.includes('intern') ||
+        text.includes('internship') ||
+        text.includes('trainee') ||
+        text.includes('estágio');
+
+      const isRemote =
+        text.includes('remote') ||
+        text.includes('worldwide');
+
+      return isIntern && isRemote;
+    });
+
+    return internshipRemote.map((job: any) => ({
+
+      id: String(job.id),
+
+      title: job.position,
+
+      company: job.company,
+
+      logo: job.company?.[0] || 'J',
+
+      type: 'Remoto',
+
+      location: 'Remoto',
+
+      salary: job.salary_min && job.salary_max
+        ? `$${job.salary_min} - $${job.salary_max}`
+        : 'A combinar',
+
+      postedAt: job.date
+        ? new Date(job.date).toLocaleDateString('pt-BR')
+        : 'Recente',
+
+      // 🔥 TAGS (skills reais da vaga)
+      skills: job.tags || [],
+
+      description: (job.description || '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 1200),
+
+      requirements: [
+        'Estar cursando graduação em tecnologia.'
+      ],
+
+      benefits: [
+        'Trabalho remoto.',
+        'Experiência internacional.'
+      ],
+
+      companyWebsite: job.url,
+    }));
+
+  } catch (error) {
+    console.error(error);
+
+    return JOBS.filter((job) =>
+      job.type === 'Remoto' &&
+      job.title.toLowerCase().includes('estágio')
+    );
+  }
+},
 
   getJobById: async (id: string): Promise<Job> => {
     const config = getApiConfig();
-    
-    await new Promise((resolve) => setTimeout(resolve, config.simulateLatencyMs));
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, config.simulateLatencyMs)
+    );
 
     if (config.simulateError) {
-      throw new Error('Falha ao carregar detalhes da vaga (Erro 500).');
+      throw new Error(
+        'Falha ao carregar detalhes da vaga (Erro 500).'
+      );
     }
 
-    const job = JOBS.find((j) => j.id === id);
+    // procura vaga da API primeiro
+    const jobs = await JobService.getJobs();
+    const job = jobs.find((j) => j.id === id);
+
     if (!job) {
-      throw new Error('Vaga não encontrada em nosso banco de dados.');
+      throw new Error('Vaga não encontrada.');
     }
 
     return job;
   },
 };
+
 
 // ==========================================
 // 3. GERENCIAMENTO DE ESTADO GLOBAL (CONTEXT API)
