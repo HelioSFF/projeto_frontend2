@@ -157,7 +157,7 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ filters, onChangeFilters
         </Box>
       </Paper>
 
-      {/* Painel do Simulador de API (Exclusivo para a Apresentação Acadêmica) */}
+      {/* Painel do Simulador de API */}
       <Collapse in={showConfig}>
         <Paper
           elevation={0}
@@ -173,11 +173,11 @@ export const JobFilters: React.FC<JobFiltersProps> = ({ filters, onChangeFilters
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <AlertCircle size={18} style={{ color: '#a5b4fc' }} />
               <Typography variant="subtitle2" sx={{ fontFamily: '"Inter", sans-serif', color: '#a5b4fc', fontWeight: 600 }}>
-                Painel do Professor - Simulador de Estado da API
+                Painel - Simulador de Estado da API
               </Typography>
             </Box>
             <Typography variant="body2" sx={{ color: '#94a3b8', fontFamily: '"Inter", sans-serif' }}>
-              Utilize os controles abaixo para simular as condições exigidas na avaliação da disciplina (erros e loading).
+              Utilize os controles abaixo para simular as condições de erros e loading.
             </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 3, mt: 1, alignItems: 'center' }}>
