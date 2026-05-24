@@ -1,6 +1,12 @@
-2ª Avaliação - Tecnologia para Frontend Avançado
+# 2ª Avaliação - Tecnologia para Frontend Avançado
 
 Trabalho prático da disciplina de Tecnologia para Frontend Avançado.
+
+## Equipe
+
+- Hélio Siqueira
+- Pedro Felipe
+- Sabrina Holanda
 
 Aplicação web desenvolvida com React, TypeScript e Vite, com foco em:
 
@@ -8,6 +14,16 @@ Aplicação web desenvolvida com React, TypeScript e Vite, com foco em:
 - Hooks
 - Rotas
 - Consumo de API
+
+## Tecnologias utilizadas
+
+- React
+- TypeScript
+- Vite
+- Material UI
+- Context API
+- React Router
+- API RemoteOK
 
 ## Sobre o projeto
 
