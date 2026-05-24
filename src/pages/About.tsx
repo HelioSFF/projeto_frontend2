@@ -5,9 +5,9 @@ import { Code2, Users, BookOpen, Layers } from 'lucide-react';
 export const About: React.FC = () => {
   // Lista fictícia de integrantes para que os alunos possam substituir facilmente
   const groupMembers = [
-    { name: 'Seu Nome Aqui', role: 'Desenvolvedor' },
-    { name: 'Nome do Colega 2', role: 'Desenvolvedor' },
-    { name: 'Nome do Colega 3', role: 'Desenvolvedor' },
+    { name: 'Hélio Siqueira', role: 'Desenvolvedor' },
+    { name: 'Pedro Felipe', role: 'Desenvolvedor' },
+    { name: 'Sabrina Holanda', role: 'Desenvolvedora' },
   ];
 
   return (
@@ -127,7 +127,7 @@ export const About: React.FC = () => {
             </Box>
 
             <Typography variant="body2" sx={{ fontFamily: '"Inter", sans-serif', color: '#94a3b8', mb: 3 }}>
-              Substitua os nomes abaixo pelos membros do seu grupo de desenvolvimento para a entrega final:
+              Membros do grupo de desenvolvimento:
             </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
